@@ -1,4 +1,6 @@
 package InterfaceAdapter.SignUp;
 
-public class SignUpPresenter {
+import UseCase.SignUp.SignUpOutupBoundary;
+
+public class SignUpPresenter implements SignUpOutupBoundary {
 }
