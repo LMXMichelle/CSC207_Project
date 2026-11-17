@@ -1,4 +1,6 @@
 package InterfaceAdapter.Login;
 
-public class LoginPresenter {
+import UseCase.Login.LoginOutputBoundary;
+
+public class LoginPresenter implements LoginOutputBoundary {
 }

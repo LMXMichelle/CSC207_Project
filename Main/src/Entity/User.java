@@ -24,4 +24,8 @@ public class User {
         return pw;
     }
 
+    public History getHistory() {
+        return history;
+    }
+
 }
