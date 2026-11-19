@@ -14,6 +14,6 @@ timer
 calculate the score  
 
 API  
-Sudoku100  
+Sudoku100 (embeded interactive game)  
 Dosuku  
 Sugoku  
