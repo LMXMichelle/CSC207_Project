@@ -7,7 +7,7 @@ public class LoginViewModel {
 
     private final List<LoginViewModelListener> listeners = new ArrayList<>();
 
-    public static final String VIEW_NAME = "log in";
+    public static final String VIEW_NAME = "Log in";
 
     private LoginState state = new LoginState();
 

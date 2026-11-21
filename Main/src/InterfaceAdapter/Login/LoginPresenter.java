@@ -5,6 +5,7 @@ import UseCase.Login.LoginOutputData;
 import InterfaceAdapter.ViewManagerModel;
 import InterfaceAdapter.LoggedIn.LoggedInViewModel;
 import InterfaceAdapter.LoggedIn.LoggedInState;
+import InterfaceAdapter.SignUp.SignUpViewModel;
 
 public class LoginPresenter implements LoginOutputBoundary {
 
@@ -41,5 +42,10 @@ public class LoginPresenter implements LoginOutputBoundary {
         final LoginState loginState = loginViewModel.getState();
         loginState.setLoginError(error);
         loginViewModel.notifyStateChanged();
+    }
+    @Override
+    public void switchToSignUpView() {
+        viewManagerModel.setState(SignUpViewModel.VIEW_NAME);
+        viewManagerModel.notifyViewChanged();
     }
 }

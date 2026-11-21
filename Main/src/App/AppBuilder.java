@@ -96,7 +96,7 @@ import java.awt.*;
         }
 
         public JFrame build() {
-            final JFrame application = new JFrame("User Login Example");
+            final JFrame application = new JFrame("Sudoku207");
             application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             application.add(cardPanel);

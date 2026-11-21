@@ -11,6 +11,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
 
 public class SignUpView extends JPanel implements ActionListener, SignUpModelListener {
 
@@ -19,12 +20,13 @@ public class SignUpView extends JPanel implements ActionListener, SignUpModelLis
     private final JPasswordField passwordInputField = new JPasswordField(21);
     private final JPasswordField repeatPasswordInputField = new JPasswordField(21);
     private SignUpController signupController = null;
-
+    private final JLabel errorLabel = new JLabel("");
     private final JButton signUp;
     private final JButton cancel;
     private final JButton toLogin;
 
     public SignUpView(SignUpViewModel signupViewModel) {
+        errorLabel.setForeground(Color.RED);
         this.signupViewModel = signupViewModel;
         signupViewModel.addListener(this);
 
@@ -77,9 +79,16 @@ public class SignUpView extends JPanel implements ActionListener, SignUpModelLis
         addRepeatPasswordListener();
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBackground(new Color(243, 232, 255));
+        buttons.setOpaque(false);
+        usernameInfo.setOpaque(false);
+        passwordInfo.setOpaque(false);
+        repeatPasswordInfo.setOpaque(false);
 
         this.add(title);
         this.add(usernameInfo);
+        this.add(errorLabel);
+
         this.add(passwordInfo);
         this.add(repeatPasswordInfo);
         this.add(buttons);
@@ -165,13 +174,17 @@ public class SignUpView extends JPanel implements ActionListener, SignUpModelLis
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Cancel not implemented yet.");
+        JOptionPane.showMessageDialog(this, "Why cancel? Sign up!");
     }
 
     @Override
     public void stateChanged() {
         if (signupViewModel.getState().getUsernameError() != null) {
-            JOptionPane.showMessageDialog(this, signupViewModel.getState().getUsernameError());
+            final SignUpState state = signupViewModel.getState();
+
+            errorLabel.setText(
+                    state.getUsernameError() == null ? "" : state.getUsernameError()
+            );
         }
     }
 

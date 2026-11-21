@@ -18,13 +18,14 @@ public class LoginView extends JPanel implements ActionListener, LoginViewModelL
 
     private final LoginViewModel loginViewModel;
 
-    private final JTextField usernameInputField = new JTextField(15);
+    private final JTextField usernameInputField = new JTextField(21);
     private final JLabel loginErrorField = new JLabel();
 
-    private final JPasswordField passwordInputField = new JPasswordField(15);
+    private final JPasswordField passwordInputField = new JPasswordField(21);
 
     private final JButton logIn;
     private final JButton cancel;
+    private final JButton signUpButton;
     private LoginController loginController = null;
 
     public LoginView(LoginViewModel loginViewModel) {
@@ -32,19 +33,22 @@ public class LoginView extends JPanel implements ActionListener, LoginViewModelL
         this.loginViewModel = loginViewModel;
         this.loginViewModel.addListener(this);
 
-        final JLabel title = new JLabel("Login Screen");
+        final JLabel title = new JLabel("Sudoku207 Login");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel("Username"), usernameInputField);
+                new JLabel("Enter Username"), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
+                new JLabel("Enter Password"), passwordInputField);
 
         final JPanel buttons = new JPanel();
-        logIn = new JButton("log in");
+        logIn = new JButton("Log in");
         buttons.add(logIn);
-        cancel = new JButton("cancel");
+        cancel = new JButton("Cancel");
         buttons.add(cancel);
+        signUpButton = new JButton("Sign Up");
+        buttons.add(signUpButton);
+        loginErrorField.setForeground(Color.RED);
 
         logIn.addActionListener(
                 new ActionListener() {
@@ -62,6 +66,10 @@ public class LoginView extends JPanel implements ActionListener, LoginViewModelL
         );
 
         cancel.addActionListener(this);
+
+        signUpButton.addActionListener(
+                evt -> loginController.switchToSignUpView()
+        );
 
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -113,6 +121,11 @@ public class LoginView extends JPanel implements ActionListener, LoginViewModelL
             }
         });
 
+        this.setBackground(new Color(255, 250, 205));
+        buttons.setOpaque(false);
+        usernameInfo.setOpaque(false);
+        passwordInfo.setOpaque(false);
+
         this.add(title);
         this.add(usernameInfo);
         this.add(loginErrorField);
@@ -120,10 +133,6 @@ public class LoginView extends JPanel implements ActionListener, LoginViewModelL
         this.add(buttons);
     }
 
-    /**
-     * React to a button click that results in evt.
-     * @param evt the ActionEvent to react to
-     */
     public void actionPerformed(ActionEvent evt) {
         System.out.println("Click " + evt.getActionCommand());
     }
