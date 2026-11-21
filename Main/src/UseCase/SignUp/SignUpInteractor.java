@@ -48,7 +48,7 @@ public class SignUpInteractor implements SignUpInputBoundary{
                     signupInputData.getPw());
             userDAO.save(user);
 
-            final SignUpOutputData signupOutputData = new SignUpOutputData(user.getUserName());
+            final SignUpOutputData signupOutputData = new SignUpOutputData(user.getName());
             userPresenter.prepareSuccessView(signupOutputData);
         }
     }

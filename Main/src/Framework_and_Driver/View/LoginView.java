@@ -54,7 +54,7 @@ public class LoginView extends JPanel implements ActionListener, LoginViewModelL
 
                             loginController.execute(
                                     currentState.getUsername(),
-                                    currentState.getPassword()
+                                    currentState.getPw()
                             );
                         }
                     }

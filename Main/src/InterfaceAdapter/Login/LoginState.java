@@ -14,7 +14,7 @@ public class LoginState {
         return loginError;
     }
 
-    public String getPassword() {
+    public String getPw() {
         return password;
     }
 

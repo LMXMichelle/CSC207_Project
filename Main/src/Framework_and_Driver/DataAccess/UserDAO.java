@@ -10,7 +10,7 @@ public class UserDAO implements SignUpUserDataAccessInterface {
     public boolean existsByName(String username) {
         boolean exist;
         for (User user : users) {
-            exist = user.getUserName().equals(username);
+            exist = user.getName().equals(username);
             if (exist){
                 return true;
             }

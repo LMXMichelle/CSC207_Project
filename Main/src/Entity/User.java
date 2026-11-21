@@ -20,11 +20,11 @@ public class User {
         this.history = new History();
     }
 
-    public String getUserName() {
+    public String getName() {
         return username;
     }
 
-    public String getPw() {
+    public String getPassword() {
         return pw;
     }
 
