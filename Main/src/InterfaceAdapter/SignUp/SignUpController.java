@@ -11,11 +11,11 @@ public class SignUpController {
         this.userSignUpInteractor = userSignUpInteractor;
     }
 
-    void execute(String username, String pw, String repeatpw){
+    public void execute(String username, String pw, String repeatpw){
         final SignUpInputData signUpInputData = new SignUpInputData(username, pw, repeatpw);
         userSignUpInteractor.execute(signUpInputData);
     }
-    void switchToLoginView() {
+    public void switchToLoginView() {
         userSignUpInteractor.switchToLoginView();
     }
 }

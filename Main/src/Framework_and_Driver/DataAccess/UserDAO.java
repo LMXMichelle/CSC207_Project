@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class UserDAO implements SignUpUserDataAccessInterface {
     private final ArrayList<User> users = new ArrayList<>();
-    //Overridden from signupuserdataaccesinterface
     @Override
     public boolean existsByName(String username) {
         boolean exist;

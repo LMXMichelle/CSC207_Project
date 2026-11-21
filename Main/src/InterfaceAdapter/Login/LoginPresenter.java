@@ -1,6 +1,10 @@
 package InterfaceAdapter.Login;
 
 import UseCase.Login.LoginOutputBoundary;
+import UseCase.Login.LoginOutputData;
+import InterfaceAdapter.ViewManagerModel;
+import InterfaceAdapter.LoggedIn.LoggedInViewModel;
+import InterfaceAdapter.LoggedIn.LoggedInState;
 
 public class LoginPresenter implements LoginOutputBoundary {
 
