@@ -6,21 +6,23 @@ import javax.swing.SwingUtilities;
 public class Main {
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(
+                () -> {
+                    final AppBuilder appBuilder = new AppBuilder();
 
-            final AppBuilder appBuilder = new AppBuilder();
+                    final JFrame application =
+                            appBuilder
+                                    .addSignupView()
+                                    .addLoginView()
+                                    .addLoggedInView()
+                                    .addNewGameView()
+                                    .addSignupUseCase()
+                                    .addLoginUseCase()
+                                    .build();
 
-            final JFrame application = appBuilder
-                    .addSignupView()
-                    .addLoginView()
-                    .addLoggedInView()
-                    .addSignupUseCase()
-                    .addLoginUseCase()
-                    .build();
-
-            application.setSize(800, 600);
-            application.setLocationRelativeTo(null);
-            application.setVisible(true);
-        });
+                    application.setSize(800, 600);
+                    application.setLocationRelativeTo(null);
+                    application.setVisible(true);
+                });
     }
 }
