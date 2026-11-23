@@ -1,5 +1,8 @@
 package Entity;
 
+import java.util.ArrayList;
+import Entity.History;
+
 public class User {
     private final String username;
     private final String pw;
@@ -14,13 +17,14 @@ public class User {
         }
         this.username = username;
         this.pw = pw;
+        this.history = new History();
     }
 
-    public String getUserName() {
+    public String getName() {
         return username;
     }
 
-    public String getPW() {
+    public String getPassword() {
         return pw;
     }
 
