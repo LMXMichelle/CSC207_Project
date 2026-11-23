@@ -1,15 +1,12 @@
 package Framework_and_Driver.View;
 
+import InterfaceAdapter.LoggedIn.LoggedInState;
 import InterfaceAdapter.LoggedIn.LoggedInViewModel;
 import InterfaceAdapter.LoggedIn.LoggedInViewModelListener;
-import InterfaceAdapter.LoggedIn.LoggedInState;
+
+import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoggedInView extends JPanel implements LoggedInViewModelListener {
 
@@ -34,6 +31,13 @@ public class LoggedInView extends JPanel implements LoggedInViewModelListener {
         this.add(username);
 
         stateChanged();
+    }
+
+    public void addNewGameButton(Runnable openSudoku) {
+        JButton newGameButton = new JButton("Play Sudoku");
+        newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        newGameButton.addActionListener(event -> openSudoku.run());
+        add(newGameButton);
     }
 
     @Override
