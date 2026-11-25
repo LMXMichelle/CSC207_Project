@@ -56,6 +56,16 @@ public final class SudokuViewModel {
                         old.getGameVersion()));
     }
 
+    public void showCorrectness(int row, int column, boolean correct) {
+        SudokuState current = getState();
+        current.setIncorrect(row, column, !correct);
+        publish(current);
+    }
+
+    public void clearCorrectness(int row, int column) {
+        showCorrectness(row, column, true);
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         changes.addPropertyChangeListener(listener);
     }

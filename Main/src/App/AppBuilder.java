@@ -21,6 +21,8 @@ import InterfaceAdapter.SignUp.SignUpController;
 import InterfaceAdapter.SignUp.SignUpPresenter;
 import InterfaceAdapter.SignUp.SignUpViewModel;
 import InterfaceAdapter.ViewManagerModel;
+import InterfaceAdapter.Correctness.CorrectnessController;
+import InterfaceAdapter.Correctness.CorrectnessPresenter;
 
 import UseCase.Login.LoginInputBoundary;
 import UseCase.Login.LoginInteractor;
@@ -29,6 +31,7 @@ import UseCase.NewGame.NewGameInteractor;
 import UseCase.SignUp.SignUpInputBoundary;
 import UseCase.SignUp.SignUpInteractor;
 import UseCase.SignUp.SignUpOutputBoundary;
+import UseCase.Correctness.CorrectnessInteractor;
 
 import java.awt.*;
 
@@ -85,11 +88,20 @@ public class AppBuilder {
     public AppBuilder addNewGameView() {
         SudokuViewModel sudokuViewModel = new SudokuViewModel();
         NewGamePresenter presenter = new NewGamePresenter(sudokuViewModel);
+        InMemoryGameStore gameStore = new InMemoryGameStore();
         NewGameInteractor interactor =
                 new NewGameInteractor(
-                        new SugokuDataAccessObject(), new InMemoryGameStore(), presenter);
+                        new SugokuDataAccessObject(), gameStore, presenter);
         NewGameController controller = new NewGameController(interactor);
-        SudokuView sudokuView = new SudokuView(sudokuViewModel, controller);
+        CorrectnessPresenter correctnessPresenter =
+                new CorrectnessPresenter(sudokuViewModel);
+
+        CorrectnessInteractor correctnessInteractor =
+                new CorrectnessInteractor(gameStore, correctnessPresenter);
+
+        CorrectnessController correctnessController =
+                new CorrectnessController(correctnessInteractor);
+        SudokuView sudokuView = new SudokuView(sudokuViewModel, controller, correctnessController);
 
         JButton backButton = new JButton("Back");
         backButton.addActionListener(event -> showView(LoggedInViewModel.VIEW_NAME));

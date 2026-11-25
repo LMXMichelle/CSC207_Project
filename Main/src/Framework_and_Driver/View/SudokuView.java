@@ -3,9 +3,12 @@ package Framework_and_Driver.View;
 import InterfaceAdapter.NewGame.NewGameController;
 import InterfaceAdapter.NewGame.SudokuState;
 import InterfaceAdapter.NewGame.SudokuViewModel;
+import InterfaceAdapter.Correctness.CorrectnessController;
 
 import java.awt.*;
 import java.util.concurrent.ExecutionException;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -18,12 +21,16 @@ public final class SudokuView extends JPanel {
     private final JTextField[][] cells = new JTextField[9][9];
     private final SudokuViewModel viewModel;
     private final NewGameController controller;
+    private final CorrectnessController correctnessController;
     // 用于区分“新棋盘”和“同一棋盘的加载/失败状态”，保留失败前的输入。
     private long displayedVersion = -1;
+    private boolean rendering = false;
 
-    public SudokuView(SudokuViewModel viewModel, NewGameController controller) {
+    public SudokuView(SudokuViewModel viewModel, NewGameController controller,
+                      CorrectnessController correctnessController) {
         this.viewModel = viewModel;
         this.controller = controller;
+        this.correctnessController = correctnessController;
         setLayout(new BorderLayout(0, 12));
         setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -46,6 +53,25 @@ public final class SudokuView extends JPanel {
                                 r == 8 ? 2 : 0,
                                 c == 8 ? 2 : 0,
                                 Color.GRAY));
+                final int row = r;
+                final int col = c;
+
+                cell.getDocument().addDocumentListener(new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        checkCell(cell, row, col);
+                    }
+
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        checkCell(cell, row, col);
+                    }
+
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        checkCell(cell, row, col);
+                    }
+                });
                 cells[r][c] = cell;
                 grid.add(cell);
             }
@@ -112,11 +138,32 @@ public final class SudokuView extends JPanel {
                 int given = board[r][c];
                 if (newBoard) cell.setText(given == 0 ? "" : String.valueOf(given));
                 cell.setEditable(state.hasGame() && !state.isLoading() && given == 0);
-                cell.setBackground(given == 0 ? Color.WHITE : new Color(232, 237, 242));
+                cell.setBackground(state.isIncorrect(r, c)
+                        ? new Color(255, 220, 220)
+                        : (given == 0 ? Color.WHITE : new Color(232, 237, 242)));
                 cell.setFont(cell.getFont().deriveFont(given == 0 ? Font.PLAIN : Font.BOLD));
+                cell.setForeground(state.isIncorrect(r, c)
+                        ? Color.RED : UIManager.getColor("TextField.foreground"));
             }
         }
         if (newBoard) displayedVersion = state.getGameVersion();
+
+        rendering = false;
+    }
+
+    private void checkCell(JTextField cell, int row, int column) {
+        if (rendering || !cell.isEditable()) {
+            return;
+        }
+
+        String text = cell.getText();
+
+        if (text.isEmpty()) {
+            viewModel.clearCorrectness(row, column);
+        } else {
+            int number = Integer.parseInt(text);
+            correctnessController.execute(row, column, number);
+        }
     }
 
     /** 允许空字符串或一个 1–9 的数字，包括粘贴和替换。 */
