@@ -7,6 +7,7 @@ public final class SudokuState {
     private final long gameVersion;
     private final String difficulty, message;
     private final boolean loading, hasGame;
+    private final boolean[][] incorrect;
 
     public SudokuState(
             int[][] board,
@@ -21,6 +22,7 @@ public final class SudokuState {
         this.message = message;
         this.loading = loading;
         this.hasGame = hasGame;
+        this.incorrect = new boolean[9][9];
     }
 
     public long getGameVersion() {
@@ -45,5 +47,13 @@ public final class SudokuState {
 
     public boolean hasGame() {
         return hasGame;
+    }
+
+    public boolean isIncorrect(int row, int column) {
+        return incorrect[row][column];
+    }
+
+    public void setIncorrect(int row, int column, boolean incorrect) {
+        this.incorrect[row][column] = incorrect;
     }
 }
