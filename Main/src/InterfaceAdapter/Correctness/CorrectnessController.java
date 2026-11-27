@@ -11,8 +11,8 @@ public class CorrectnessController {
         this.interactor = Interactor;
     }
 
-    public void execute(int row, int column, int input){
-        CorrectnessInputData inputData = new CorrectnessInputData(row, column, input);
+    public void execute(int row, int column, int input, String username){
+        CorrectnessInputData inputData = new CorrectnessInputData(row, column, input, username);
 
         interactor.execute(inputData);
     }

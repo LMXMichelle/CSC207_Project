@@ -4,6 +4,8 @@ import InterfaceAdapter.NewGame.NewGameController;
 import InterfaceAdapter.NewGame.SudokuState;
 import InterfaceAdapter.NewGame.SudokuViewModel;
 import InterfaceAdapter.Correctness.CorrectnessController;
+import InterfaceAdapter.LoggedIn.LoggedInViewModel;
+import InterfaceAdapter.LoggedIn.LoggedInViewModel;
 
 import java.awt.*;
 import java.util.concurrent.ExecutionException;
@@ -25,12 +27,14 @@ public final class SudokuView extends JPanel {
     // 用于区分“新棋盘”和“同一棋盘的加载/失败状态”，保留失败前的输入。
     private long displayedVersion = -1;
     private boolean rendering = false;
+    private final LoggedInViewModel loggedInViewModel;
 
     public SudokuView(SudokuViewModel viewModel, NewGameController controller,
-                      CorrectnessController correctnessController) {
+                      CorrectnessController correctnessController, LoggedInViewModel loggedInViewModel) {
         this.viewModel = viewModel;
         this.controller = controller;
         this.correctnessController = correctnessController;
+        this.loggedInViewModel = loggedInViewModel;
         setLayout(new BorderLayout(0, 12));
         setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -127,6 +131,7 @@ public final class SudokuView extends JPanel {
     }
 
     private void render(SudokuState state) {
+        rendering = true;
         newGame.setEnabled(!state.isLoading());
         difficulty.setEnabled(!state.isLoading());
         status.setText(state.getMessage());
@@ -157,12 +162,14 @@ public final class SudokuView extends JPanel {
         }
 
         String text = cell.getText();
+        String username = loggedInViewModel.getState().getUsername();
 
         if (text.isEmpty()) {
-            viewModel.clearCorrectness(row, column);
-        } else {
+            correctnessController.execute(row, column, 0, username);
+        }
+        else {
             int number = Integer.parseInt(text);
-            correctnessController.execute(row, column, number);
+            correctnessController.execute(row, column, number, username);
         }
     }
 
