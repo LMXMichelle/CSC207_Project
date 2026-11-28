@@ -9,6 +9,8 @@ import Framework_and_Driver.View.LoginView;
 import Framework_and_Driver.View.SignUpView;
 import Framework_and_Driver.View.SudokuView;
 import Framework_and_Driver.View.ViewManager;
+import Framework_and_Driver.DataAccess.FileHistoryDataAccessObject;
+import Framework_and_Driver.View.HistoryView;
 
 import InterfaceAdapter.LoggedIn.LoggedInViewModel;
 import InterfaceAdapter.Login.LoginController;
@@ -23,6 +25,9 @@ import InterfaceAdapter.SignUp.SignUpViewModel;
 import InterfaceAdapter.ViewManagerModel;
 import InterfaceAdapter.Correctness.CorrectnessController;
 import InterfaceAdapter.Correctness.CorrectnessPresenter;
+import InterfaceAdapter.History.HistoryViewModel;
+import InterfaceAdapter.History.ViewHistoryController;
+import InterfaceAdapter.History.ViewHistoryPresenter;
 
 import UseCase.Login.LoginInputBoundary;
 import UseCase.Login.LoginInteractor;
@@ -32,6 +37,8 @@ import UseCase.SignUp.SignUpInputBoundary;
 import UseCase.SignUp.SignUpInteractor;
 import UseCase.SignUp.SignUpOutputBoundary;
 import UseCase.Correctness.CorrectnessInteractor;
+import UseCase.History.SaveHistoryInteractor;
+import UseCase.History.ViewHistoryInteractor;
 
 import java.awt.*;
 
@@ -39,12 +46,15 @@ import javax.swing.*;
 
 public class AppBuilder {
     private static final String SUDOKU_VIEW_NAME = "sudoku";
+    private static final String HISTORY_VIEW_NAME = "history";
 
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     final UserFactory userFactory = new UserFactory();
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
     ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
+    private final FileHistoryDataAccessObject historyDAO =
+            new FileHistoryDataAccessObject("history.csv");
 
     // set which data access implementation to use, can be any
     // of the classes from the data_access package
@@ -96,12 +106,16 @@ public class AppBuilder {
         CorrectnessPresenter correctnessPresenter =
                 new CorrectnessPresenter(sudokuViewModel);
 
+        SaveHistoryInteractor saveHistoryInteractor =
+                new SaveHistoryInteractor(historyDAO);
+
         CorrectnessInteractor correctnessInteractor =
-                new CorrectnessInteractor(gameStore, correctnessPresenter);
+                new CorrectnessInteractor(gameStore, correctnessPresenter, saveHistoryInteractor);
 
         CorrectnessController correctnessController =
                 new CorrectnessController(correctnessInteractor);
-        SudokuView sudokuView = new SudokuView(sudokuViewModel, controller, correctnessController);
+        SudokuView sudokuView = new SudokuView(sudokuViewModel, controller, correctnessController,
+                loggedInViewModel);
 
         JButton backButton = new JButton("Back");
         backButton.addActionListener(event -> showView(LoggedInViewModel.VIEW_NAME));
@@ -113,6 +127,33 @@ public class AppBuilder {
         sudokuScreen.add(sudokuView, BorderLayout.CENTER);
         cardPanel.add(sudokuScreen, SUDOKU_VIEW_NAME);
         loggedInView.addNewGameButton(() -> showView(SUDOKU_VIEW_NAME));
+        return this;
+    }
+
+    public AppBuilder addHistoryView() {
+        HistoryViewModel historyViewModel = new HistoryViewModel();
+
+        ViewHistoryPresenter presenter =
+                new ViewHistoryPresenter(historyViewModel);
+
+        ViewHistoryInteractor interactor =
+                new ViewHistoryInteractor(historyDAO, presenter);
+
+        ViewHistoryController controller =
+                new ViewHistoryController(interactor);
+
+        HistoryView historyView = new HistoryView(historyViewModel);
+
+        cardPanel.add(historyView, HISTORY_VIEW_NAME);
+
+        historyView.getBackButton().addActionListener(
+                event -> showView(LoggedInViewModel.VIEW_NAME));
+
+        loggedInView.addHistoryButton(() -> {
+            controller.execute(loggedInViewModel.getState().getUsername());
+            showView(HISTORY_VIEW_NAME);
+        });
+
         return this;
     }
 

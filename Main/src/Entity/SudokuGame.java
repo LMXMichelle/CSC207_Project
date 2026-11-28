@@ -5,6 +5,8 @@ public final class SudokuGame {
     private final int[][] initialBoard;
     private final int[][] solution;
     private final String difficulty;
+    private final int[][] currentBoard;
+    private boolean historySaved = false;
 
     public SudokuGame(int[][] board, int[][] solution, String difficulty) {
         validateShape(board);
@@ -39,6 +41,7 @@ public final class SudokuGame {
         this.initialBoard = copy(board);
         this.solution = copy(solution);
         this.difficulty = difficulty;
+        this.currentBoard = copy(board);
     }
 
     private static void validateShape(int[][] board) {
@@ -66,5 +69,37 @@ public final class SudokuGame {
 
     public String getDifficulty() {
         return difficulty;
+    }
+
+    public boolean isHistorySaved() {
+        return historySaved;
+    }
+
+    public void updateCell(int row, int column, int input){
+        if (input < 0 || input > 9 ||
+                row < 0 || row > 8 ||
+                column < 0 || column > 8){
+            throw new IllegalArgumentException("Invalid cell or input");
+        }
+        if (initialBoard[row][column] != 0){
+            return;
+        }
+        currentBoard[row][column] = input;
+
+    };
+
+    public boolean isCompleted() {
+        for (int row = 0; row < 9; row++) {
+            for (int column = 0; column < 9; column++) {
+                if (currentBoard[row][column] != solution[row][column]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void markHistorySaved() {
+        this.historySaved = true;
     }
 }

@@ -6,7 +6,6 @@ import Entity.History;
 public class User {
     private final String username;
     private final String pw;
-    private History history;
 
     public User(String username, String pw) {
         if ("".equals(username)) {
@@ -17,7 +16,6 @@ public class User {
         }
         this.username = username;
         this.pw = pw;
-        this.history = new History();
     }
 
     public String getName() {
@@ -26,10 +24,6 @@ public class User {
 
     public String getPassword() {
         return pw;
-    }
-
-    public History getHistory() {
-        return history;
     }
 
 }
